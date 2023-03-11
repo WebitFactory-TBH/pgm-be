@@ -1,9 +1,11 @@
+import { PrismaModule } from '@core/prisma/prisma.module'
 import { Module } from '@nestjs/common'
-import { BlockchainsService } from './blockchains.service'
 import { BlockchainsController } from './blockchains.controller'
+import { BlockchainsService } from './blockchains.service'
 
 @Module({
   controllers: [BlockchainsController],
-  providers: [BlockchainsService]
+  providers: [BlockchainsService],
+  imports: [PrismaModule]
 })
 export class BlockchainsModule {}

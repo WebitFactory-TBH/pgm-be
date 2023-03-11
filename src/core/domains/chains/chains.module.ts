@@ -1,9 +1,11 @@
+import { PrismaModule } from '@core/prisma/prisma.module'
 import { Module } from '@nestjs/common'
-import { ChainsService } from './chains.service'
 import { ChainsController } from './chains.controller'
+import { ChainsService } from './chains.service'
 
 @Module({
   controllers: [ChainsController],
-  providers: [ChainsService]
+  providers: [ChainsService],
+  imports: [PrismaModule]
 })
 export class ChainsModule {}
