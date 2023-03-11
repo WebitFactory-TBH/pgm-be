@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: bhack-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${FORWARD_APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .docker.env
+    networks:
+      - bhack-network
+    depends_on:
+      - db
+      - redis
+    healthcheck:
+      test: wget -nv -O /dev/null http://localhost:${APP_PORT} || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  db:
+    container_name: bhack-database
+    image: mysql:8.0.32
+    ports:
+      - "${FORWARD_DB_PORT}:${DB_PORT}"
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    env_file:
+      - .docker.env
+    networks:
+      - bhack-network
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_DATABASE: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", 'mysqladmin ping' ]
+      interval: 1m
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  redis:
+    container_name: bhack-redis
+    image: redis:6.0.9
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${FORWARD_REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - redisdata:/data
+    networks:
+      - bhack-network
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    healthcheck:
+      test: redis-cli ping
+      interval: 1m
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+networks:
+  bhack-network:
+
+volumes:
+  mysqldata:
+  redisdata:

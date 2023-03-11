@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  nickname String   @unique
+  Wallet   Wallet[]
+
+  @@map("users")
+}
+
+model Wallet {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  owner       User          @relation(fields: [userId], references: [id])
+  userId      String
+  address     String        @unique
+  chains      Chain[]
+  PaymentLink PaymentLink[]
+
+  @@map("wallets")
+}
+
+model Blockchain {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  name        String  @unique
+  contractABI Json
+  Chain       Chain[]
+
+  @@map("blockchains")
+}
+
+model Chain {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  name            String     @unique
+  metadata        Json
+  blockchain      Blockchain @relation(fields: [blockchainId], references: [id])
+  blockchainId    String
+  contractAddress String
+  wallets         Wallet[]
+
+  @@map("chains")
+}
+
+model PaymentLink {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  creatorWallet Wallet     @relation(fields: [walletId], references: [id])
+  walletId      String
+  status        String
+  Payments      Payments[]
+
+  @@map("payment_links")
+}
+
+model Payments {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  paymentLink   PaymentLink @relation(fields: [paymentLinkId], references: [id])
+  paymentLinkId String
+
+  from      String
+  to        String
+  amount    String
+  timestamp DateTime? // not completed if null
+
+  @@map("payments")
+}
