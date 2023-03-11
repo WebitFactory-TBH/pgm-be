@@ -17,4 +17,4 @@ COPY ./prisma ./prisma
 RUN npm ci --omit=dev --ignore-scripts && npx prisma generate
 COPY --from=build /usr/src/app/dist ./dist
 
-CMD ["node", "./dist/main.js"]
+CMD ["node", "./dist/src/main.js"]
