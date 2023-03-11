@@ -17,7 +17,7 @@ model User {
   deletedAt DateTime? @map("deleted_at")
 
   nickname String   @unique
-  Wallet   Wallet[]
+  wallets  Wallet[]
 
   @@map("users")
 }
@@ -28,11 +28,11 @@ model Wallet {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? @map("deleted_at")
 
-  owner       User          @relation(fields: [userId], references: [id])
-  userId      String
-  address     String        @unique
-  chains      Chain[]
-  PaymentLink PaymentLink[]
+  owner        User          @relation(fields: [userId], references: [id])
+  userId       String
+  address      String        @unique
+  chains       Chain[]
+  paymentLinks PaymentLink[]
 
   @@map("wallets")
 }
@@ -45,7 +45,7 @@ model Blockchain {
 
   name        String  @unique
   contractABI Json
-  Chain       Chain[]
+  chains      Chain[]
 
   @@map("blockchains")
 }
@@ -72,15 +72,16 @@ model PaymentLink {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? @map("deleted_at")
 
-  creatorWallet Wallet     @relation(fields: [walletId], references: [id])
+  creatorWallet Wallet       @relation(fields: [walletId], references: [id])
   walletId      String
   status        String
-  Payments      Payments[]
+  payments      Payment[]
+  linkAccesses  LinkAccess[]
 
   @@map("payment_links")
 }
 
-model Payments {
+model Payment {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -95,4 +96,18 @@ model Payments {
   timestamp DateTime? // not completed if null
 
   @@map("payments")
+}
+
+model LinkAccess {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  paymentLink   PaymentLink @relation(fields: [paymentLinkId], references: [id])
+  paymentLinkId String
+  meta          Json
+  timestamp     DateTime
+
+  @@map("link_access")
 }
