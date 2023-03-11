@@ -19,6 +19,12 @@ model User {
   nickname String   @unique
   wallets  Wallet[]
 
+  firstName      String?
+  lastName       String?
+  billingAddress String?
+  companyName    String?
+  companyRegNo   String?
+
   @@map("users")
 }
 

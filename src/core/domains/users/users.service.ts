@@ -2,14 +2,35 @@ import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/core/prisma/prisma.service'
 
+export interface createUserData {
+  nickname: string,
+  firstName?: string,
+  lastName?: string,
+  billingAddress?: string,
+  companyName?: string,
+  companyRegNo?: string,
+  walletId: string
+}
+
 @Injectable()
 export class UsersService {
   constructor (private prisma: PrismaService) {}
 
-  async create (nickname: string) {
+  async create (data: createUserData) {
+    const { nickname, firstName, lastName, billingAddress, companyName, companyRegNo } = data
     return await this.prisma.user.create({
       data: {
-        nickname
+        nickname,
+        firstName,
+        lastName,
+        billingAddress,
+        companyName,
+        companyRegNo,
+        wallets: data.walletId && {
+          connect: {
+            id: data.walletId
+          }
+        }
       }
     })
   }
