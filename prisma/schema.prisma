@@ -83,6 +83,7 @@ model PaymentLink {
   status        String
   payments      Payment[]
   linkAccesses  LinkAccess[]
+  metadata      Json
 
   @@map("payment_links")
 }

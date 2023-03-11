@@ -23,6 +23,14 @@ export class WalletsService {
     return await this.prisma.wallet.findMany()
   }
 
+  async findWalletByAddress (address: string) {
+    return await this.prisma.wallet.findUnique({
+      where: {
+        address
+      }
+    })
+  }
+
   async findOne (id: string) {
     return await this.prisma.wallet.findUnique({
       where: {

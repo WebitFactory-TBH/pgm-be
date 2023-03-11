@@ -1,21 +1,34 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { PaymentLinkStatus } from 'src/common/enums/payment-links/PaymentLinkStatus.enum'
 import { PrismaService } from 'src/core/prisma/prisma.service'
+
+export interface createBlockchainData {
+  walletId: string,
+  metadata?: string,
+  payments: {
+    from: string,
+    to: string,
+    amount: string
+  }[]
+}
 
 @Injectable()
 export class PaymentLinksService {
   constructor (private prisma: PrismaService) {}
 
-  async create (walletId: string, status: PaymentLinkStatus) {
+  async create (data: createBlockchainData) {
     return await this.prisma.paymentLink.create({
       data: {
         creatorWallet: {
           connect: {
-            id: walletId
+            id: data.walletId
           }
         },
-        status
+        metadata: data.metadata,
+        status: 'PENDING',
+        payments: {
+          create: data.payments
+        }
       }
     })
   }

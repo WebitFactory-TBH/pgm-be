@@ -29,7 +29,7 @@ export class AuthenticationService {
     const data = this.decrypt(token)
 
     if (!data.address || !data.timestamp || !data.validFor) {
-      return InvalidTokenException
+      throw InvalidTokenException
     }
 
     const timestamp = new Date(data.timestamp)

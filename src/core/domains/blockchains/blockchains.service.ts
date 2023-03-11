@@ -26,6 +26,14 @@ export class BlockchainsService {
     return await this.prisma.blockchain.findMany()
   }
 
+  async getBlockChainsAndChains () {
+    return await this.prisma.blockchain.findMany({
+      include: {
+        chains: true
+      }
+    })
+  }
+
   async findOne (id: string) {
     return await this.prisma.blockchain.findUnique({
       where: {
