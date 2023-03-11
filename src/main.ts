@@ -7,7 +7,10 @@ import { AppModule } from './app.module'
 
 async function bootstrap () {
   const app = await NestFactory.create(AppModule)
-  app.enableCors()
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*'
+  })
 
   const configService: ConfigService = app.get(ConfigService)
   const port = configService.get('APP_PORT')
