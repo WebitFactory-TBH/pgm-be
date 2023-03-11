@@ -11,11 +11,23 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@domains/*": [
+        "./src/core/domains/*"
+      ],
+      "@core/*": [
+        "./src/core/*"
+      ],
+      "@common/*": [
+        "./src/common/*"
+      ],
+    }
   }
 }
