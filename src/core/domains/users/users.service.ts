@@ -8,8 +8,7 @@ export interface createUserData {
   lastName?: string,
   billingAddress?: string,
   companyName?: string,
-  companyRegNo?: string,
-  walletId: string
+  companyRegNo?: string
 }
 
 @Injectable()
@@ -25,12 +24,15 @@ export class UsersService {
         lastName,
         billingAddress,
         companyName,
-        companyRegNo,
-        wallets: data.walletId && {
-          connect: {
-            id: data.walletId
-          }
-        }
+        companyRegNo
+      }
+    })
+  }
+
+  async findUserByNickname (nickname: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        nickname
       }
     })
   }

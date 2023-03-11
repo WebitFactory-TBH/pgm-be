@@ -1,4 +1,5 @@
 import { UsersService } from '@domains/users/users.service'
+import { WalletsService } from '@domains/wallets/wallets.service'
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common'
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Response } from 'express'
@@ -11,7 +12,7 @@ import { TokenExpiredException } from './exceptions/TokenExpired.exception'
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor (private readonly authenticationService: AuthenticationService, private readonly usersService: UsersService) {
+  constructor (private readonly authenticationService: AuthenticationService, private readonly usersService: UsersService, private readonly walletsService: WalletsService) {
   }
 
   @ApiOkResponse({ description: 'Token successfully generated' })
@@ -54,12 +55,9 @@ export class AuthenticationController {
   async createAccount (
     @Body() accountDto: CreateAccountDto,
     @Res() response: Response) {
+    let address: string
     try {
-      const address = this.authenticationService.verifySignature(accountDto.signature, accountDto.token)
-
-      if (address) {
-        return response.status(HttpStatus.OK).json({ address })
-      }
+      address = this.authenticationService.verifySignature(accountDto.signature, accountDto.token)
     } catch (e) {
       switch (e) {
       case InvalidTokenException:
@@ -71,16 +69,25 @@ export class AuthenticationController {
       }
     }
 
-    const user = await this.usersService.create({
-      walletId: accountDto.walletId,
-      nickname: accountDto.nickname,
-      firstName: accountDto.firstName,
-      lastName: accountDto.lastName,
-      billingAddress: accountDto.billingAddress,
-      companyName: accountDto.companyName,
-      companyRegNo: accountDto.companyRegNo
-    })
+    try {
+      const user = await this.usersService.create({
+        nickname: accountDto.nickname,
+        firstName: accountDto.firstName,
+        lastName: accountDto.lastName,
+        billingAddress: accountDto.billingAddress,
+        companyName: accountDto.companyName,
+        companyRegNo: accountDto.companyRegNo
+      })
 
-    return response.status(HttpStatus.OK).json(user)
+      const wallet = await this.walletsService.create({
+        address,
+        userId: user.id,
+        chainId: accountDto.chainId
+      })
+
+      return response.status(HttpStatus.OK).json({ user, wallet })
+    } catch (e) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' })
+    }
   }
 }

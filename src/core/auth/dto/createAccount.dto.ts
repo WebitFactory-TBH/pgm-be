@@ -11,12 +11,12 @@ export class CreateAccountDto {
   public signature: string
 
   @IsString()
-  @ApiProperty({ type: String, description: 'User nickname', example: 'johndoe' })
-  public nickname: string
+  @ApiProperty({ type: String, description: 'The id of the chain currently used by the user (the database id)', example: 'clf4arlga00019cs16qhm7w8d' })
+  public chainId: string
 
   @IsString()
-  @ApiProperty({ type: String, description: 'The id of the wallet used by the user', example: 'arandomuuuid' })
-  public walletId: string
+  @ApiProperty({ type: String, description: 'User nickname', example: 'johndoe' })
+  public nickname: string
 
   @IsString()
   @ApiProperty({ type: String, description: 'The user\'s first name', example: 'John' })

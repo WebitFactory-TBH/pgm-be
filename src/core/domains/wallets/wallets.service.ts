@@ -2,17 +2,29 @@ import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/core/prisma/prisma.service'
 
+export interface CreateWalletData {
+  userId: string
+  chainId: string
+  address: string
+}
+
 @Injectable()
 export class WalletsService {
   constructor (private prisma: PrismaService) {}
 
-  async create (userId: string, address: string) {
+  async create (data: CreateWalletData) {
+    const { userId, chainId, address } = data
     return await this.prisma.wallet.create({
       data: {
         address,
         owner: {
           connect: {
             id: userId
+          }
+        },
+        chains: {
+          connect: {
+            id: chainId
           }
         }
       }
