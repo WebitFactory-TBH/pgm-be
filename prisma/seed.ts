@@ -6,15 +6,18 @@ async function main () {
   await prisma.chain.deleteMany({})
   await prisma.blockchain.deleteMany({})
 
+  const evmAbi = fs.readFileSync('./prisma/evm.abi.json', 'utf8')
+  const mxAbi = fs.readFileSync('./prisma/multiversX.abi.json', 'utf8')
+
   await prisma.blockchain.createMany({
     data: [
       {
         name: 'EVM',
-        contractABI: fs.readFileSync('./prisma/evm.abi.json').toString()
+        contractABI: evmAbi
       },
       {
         name: 'MultiverseX',
-        contractABI: fs.readFileSync('./prisma/multiversX.abi.json').toString()
+        contractABI: mxAbi
       }
     ]
   })
@@ -29,7 +32,7 @@ async function main () {
         }
       },
       name: 'Mumbai',
-      contractAddress: '',
+      contractAddress: '0x85e5d6475ebc5980445acceac0c12f1d5cb750a5',
       metadata: {}
     }
   })
@@ -42,7 +45,7 @@ async function main () {
         }
       },
       name: 'MultiversX Devnet',
-      contractAddress: '',
+      contractAddress: 'erd1qqqqqqqqqqqqqpgqt6xlauatj3phxu39ur9uw390ugxugza8rlzqumyhmy',
       metadata: {}
     }
   })

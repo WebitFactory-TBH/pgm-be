@@ -57,15 +57,15 @@
       "mutability": "mutable",
       "inputs": [
         {
+          "name": "payment_id",
+          "type": "utf-8 string"
+        },
+        {
           "name": "payments",
           "type": "List<IndividualPayment>"
         }
       ],
-      "outputs": [
-        {
-          "type": "u32"
-        }
-      ]
+      "outputs": []
     },
     {
       "name": "completePayment",
@@ -76,7 +76,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32"
+          "type": "utf-8 string"
         }
       ],
       "outputs": []
@@ -87,7 +87,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32"
+          "type": "utf-8 string"
         }
       ],
       "outputs": []
@@ -121,7 +121,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32"
+          "type": "utf-8 string"
         }
       ],
       "outputs": [
@@ -136,7 +136,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32"
+          "type": "utf-8 string"
         }
       ],
       "outputs": [
@@ -152,7 +152,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32",
+          "type": "utf-8 string",
           "indexed": true
         },
         {
@@ -167,7 +167,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32",
+          "type": "utf-8 string",
           "indexed": true
         }
       ]
@@ -177,7 +177,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32",
+          "type": "utf-8 string",
           "indexed": true
         }
       ]
@@ -187,7 +187,7 @@
       "inputs": [
         {
           "name": "payment_id",
-          "type": "u32",
+          "type": "utf-8 string",
           "indexed": true
         },
         {
