@@ -6,7 +6,7 @@ import { PrismaService } from 'src/core/prisma/prisma.service'
 export class LinkAccessesService {
   constructor (private prisma: PrismaService) {}
 
-  async create (paymentLinkId: string, timestamp: Date, meta: string) {
+  async create (paymentLinkId: string, timestamp: Date, meta?: string) {
     return await this.prisma.linkAccess.create({
       data: {
         paymentLink: {
