@@ -37,6 +37,20 @@ export class UsersService {
     })
   }
 
+  async getPaymentOfUserWithWallet (walletAddress: string) {
+    return await this.prisma.paymentLink.findMany({
+      where: {
+        creatorWallet: {
+          address: walletAddress
+        }
+      },
+      include: {
+        payments: true,
+        linkAccesses: true
+      }
+    })
+  }
+
   async findUserByWalletAddress (walletAddress: string) {
     return await this.prisma.user.findFirst({
       where: {
@@ -61,6 +75,17 @@ export class UsersService {
       where: {
         id
       }
+    })
+  }
+
+  async updateUserByWalletAddress (walletAddress: string, data: Prisma.UserUncheckedUpdateInput) {
+    const user = await this.findUserByWalletAddress(walletAddress)
+
+    return await this.prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data
     })
   }
 
