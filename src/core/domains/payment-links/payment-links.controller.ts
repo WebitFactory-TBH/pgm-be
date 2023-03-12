@@ -1,8 +1,8 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
-import { PermissionsGuard, RequestWithWalletAddress } from '@common/guards/permission.guard'
+import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { WalletsService } from '@domains/wallets/wallets.service'
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common'
-import { ApiBody, ApiOkResponse } from '@nestjs/swagger'
+import { Body, Controller, Post, Req } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { CreatePaymentDto } from './dto/createPayment.dto'
 import { PaymentLinksService } from './payment-links.service'
 
@@ -11,10 +11,10 @@ export class PaymentLinksController {
   constructor (private readonly paymentLinksService: PaymentLinksService, private readonly walletsService: WalletsService) {}
 
   @ApiOkResponse({ description: 'Created an entry for the payment link' })
+  @ApiBearerAuth()
   @ApiBody({ type: CreatePaymentDto })
   @Post('create')
   @Private()
-  @UseGuards(PermissionsGuard)
   async createPayment (@Body() paymentLinkDto: CreatePaymentDto,
   @Req() request: RequestWithWalletAddress) {
     const walletAddress = request.userAddress

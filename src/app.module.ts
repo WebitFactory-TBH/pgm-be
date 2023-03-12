@@ -1,3 +1,4 @@
+import { PermissionsGuard } from '@common/guards/permission.guard'
 import { AuthenticationModule } from '@core/auth/authentication.module'
 import { PrismaModule } from '@core/prisma/prisma.module'
 import { DomainsModule } from '@domains/domains.module'
@@ -13,6 +14,13 @@ import { ConfigModule } from '@nestjs/config'
     PrismaModule,
     DomainsModule,
     AuthenticationModule
+  ],
+  providers: [
+    {
+      provide: 'APP_GUARD',
+      useClass: PermissionsGuard
+    }
   ]
+
 })
 export class AppModule {}

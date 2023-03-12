@@ -35,10 +35,12 @@ export class PermissionsGuard implements CanActivate {
     if (!token || !signature) return false
 
     try {
-      const address = this.authService.verifySignature(token, signature)
+      const address = this.authService.verifySignature(signature, token)
 
       if (address) {
         req.userAddress = address
+
+        return true
       }
     } catch (e) {
       return false

@@ -37,6 +37,21 @@ export class UsersService {
     })
   }
 
+  async findUserByWalletAddress (walletAddress: string) {
+    return await this.prisma.user.findFirst({
+      where: {
+        wallets: {
+          some: {
+            address: walletAddress
+          }
+        }
+      },
+      include: {
+        wallets: true
+      }
+    })
+  }
+
   async findAll () {
     return await this.prisma.user.findMany()
   }
