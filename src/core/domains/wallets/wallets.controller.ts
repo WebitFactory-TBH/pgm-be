@@ -2,7 +2,7 @@ import { Private } from '@common/decorators/isPrivate.decorator'
 import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Prisma, Wallet } from '@prisma/client'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { LinkChainDto } from './dto/linkChain.dto'
 import { WalletsService } from './wallets.service'
 
