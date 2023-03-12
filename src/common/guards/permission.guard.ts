@@ -1,6 +1,7 @@
 import { AuthenticationService } from '@core/auth/authentication.service'
 import { CanActivate, ExecutionContext, Inject, Injectable, forwardRef } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { Request } from 'express'
 
 export class RequestWithWalletAddress extends Request {
   userAddress: string

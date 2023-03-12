@@ -23,8 +23,8 @@ async function bootstrap () {
   )
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS Template')
-    .setVersion('0.1')
+    .setTitle('Pagamento API')
+    .setVersion('1.0')
     .build()
 
   const document = SwaggerModule.createDocument(app, config)
