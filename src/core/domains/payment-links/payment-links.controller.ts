@@ -1,11 +1,12 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
 import { WalletsService } from '@domains/wallets/wallets.service'
-import { Body, Controller, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Request } from 'express'
 import { CancelPaymentDto } from './dto/cancelPayment.dto'
 import { CompletePaymentDto } from './dto/completePayment.dto'
 import { CreatePaymentDto } from './dto/createPayment.dto'
+import { GetPaymentDto } from './dto/getPayment.dto'
 import { PaymentLinksService } from './payment-links.service'
 
 @Controller('payment-links')
@@ -44,5 +45,12 @@ export class PaymentLinksController {
   @Private()
   async cancelPayment (@Body() cancelPaymentDto: CancelPaymentDto) {
     return await this.paymentLinksService.cancelPayment(cancelPaymentDto.paymentId)
+  }
+
+  @ApiOkResponse({ description: 'All payment data' })
+  @ApiBody({ type: GetPaymentDto })
+  @Get('data')
+  async getPaymentData (@Body() getPaymentDto: GetPaymentDto) {
+    return await this.paymentLinksService.getData(getPaymentDto.paymentId)
   }
 }

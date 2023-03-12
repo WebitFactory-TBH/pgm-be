@@ -90,6 +90,19 @@ export class PaymentLinksService {
     })
   }
 
+  async getData (id: string) {
+    return await this.prisma.paymentLink.findUnique({
+      where: {
+        id
+      },
+      include: {
+        payments: true,
+        creatorWallet: true,
+        linkAccesses: true
+      }
+    })
+  }
+
   async update (id: string, data: Prisma.PaymentLinkUncheckedUpdateInput) {
     return await this.prisma.paymentLink.update({
       where: {
