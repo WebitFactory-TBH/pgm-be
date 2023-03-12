@@ -1,5 +1,4 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
-import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Prisma, Wallet } from '@prisma/client'
@@ -18,10 +17,10 @@ export class WalletsController {
   @Private()
   async linkWallet (
     @Body() linkChainDto: LinkChainDto,
-    @Req() request: RequestWithWalletAddress,
+    @Req() request: Request,
     @Res() response: Response
   ) {
-    const walletAddress = request.userAddress
+    const walletAddress = (request as any).userAddress
 
     let wallet: Wallet
 

@@ -1,15 +1,6 @@
 import { AuthenticationService } from '@core/auth/authentication.service'
 import { CanActivate, ExecutionContext, Inject, Injectable, forwardRef } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { Request } from 'express'
-
-export class RequestWithWalletAddress extends Request {
-  userAddress: string
-  headers: Headers & {
-    token: string
-    signature: string
-  }
-}
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -27,7 +18,7 @@ export class PermissionsGuard implements CanActivate {
 
     if (!isPrivate) return true
 
-    const req = context.switchToHttp().getRequest() as RequestWithWalletAddress
+    const req = context.switchToHttp().getRequest()
 
     const token = req.headers.token
     const signature = req.headers.signature

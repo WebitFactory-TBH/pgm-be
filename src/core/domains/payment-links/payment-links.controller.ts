@@ -1,8 +1,8 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
-import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { WalletsService } from '@domains/wallets/wallets.service'
 import { Body, Controller, Post, Req } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
+import { Request } from 'express'
 import { CancelPaymentDto } from './dto/cancelPayment.dto'
 import { CompletePaymentDto } from './dto/completePayment.dto'
 import { CreatePaymentDto } from './dto/createPayment.dto'
@@ -18,8 +18,8 @@ export class PaymentLinksController {
   @Post('create')
   @Private()
   async createPayment (@Body() paymentLinkDto: CreatePaymentDto,
-  @Req() request: RequestWithWalletAddress) {
-    const walletAddress = request.userAddress
+  @Req() request: Request) {
+    const walletAddress = (request as any).userAddress
 
     const wallet = await this.walletsService.findWalletByAddress(walletAddress)
 

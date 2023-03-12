@@ -1,10 +1,9 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
-import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { WalletsService } from '@domains/wallets/wallets.service'
 import { Body, Controller, Get, HttpStatus, Post, Req, Res } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Prisma } from '@prisma/client'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { LinkWalletDto } from './dto/linkWallet.dto'
 import { UsersService } from './users.service'
 
@@ -17,8 +16,8 @@ export class UsersController {
   @Get('data')
   @Private()
   async getUserData (
-  @Req() request: RequestWithWalletAddress, @Res() response: Response) {
-    const walletAddress = request.userAddress
+  @Req() request: Request, @Res() response: Response) {
+    const walletAddress = (request as any).userAddress
 
     try {
       const user = await this.usersService.findUserByWalletAddress(walletAddress)
@@ -41,9 +40,9 @@ export class UsersController {
   @Private()
   async linkWallet (
     @Body() linkWalletDto: LinkWalletDto,
-    @Req() request: RequestWithWalletAddress,
+    @Req() request: Request,
     @Res() response: Response) {
-    const walletAddress = request.userAddress
+    const walletAddress = (request as any).userAddress
 
     try {
       const wallet = await this.walletsService.create({
