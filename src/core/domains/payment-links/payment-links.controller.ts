@@ -3,6 +3,8 @@ import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { WalletsService } from '@domains/wallets/wallets.service'
 import { Body, Controller, Post, Req } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
+import { CancelPaymentDto } from './dto/cancelPayment.dto'
+import { CompletePaymentDto } from './dto/completePayment.dto'
 import { CreatePaymentDto } from './dto/createPayment.dto'
 import { PaymentLinksService } from './payment-links.service'
 
@@ -26,5 +28,21 @@ export class PaymentLinksController {
       metadata: paymentLinkDto.meta,
       payments: paymentLinkDto.payments
     })
+  }
+
+  @ApiOkResponse({ description: 'Payment completed' })
+  @ApiBody({ type: CompletePaymentDto })
+  @Post('complete')
+  async completePayment (@Body() completePaymentDto: CompletePaymentDto) {
+    return await this.paymentLinksService.completePayment(completePaymentDto)
+  }
+
+  @ApiOkResponse({ description: 'Payment cancelled' })
+  @ApiBearerAuth()
+  @ApiBody({ type: CancelPaymentDto })
+  @Post('cancel')
+  @Private()
+  async cancelPayment (@Body() cancelPaymentDto: CancelPaymentDto) {
+    return await this.paymentLinksService.cancelPayment(cancelPaymentDto.paymentId)
   }
 }
