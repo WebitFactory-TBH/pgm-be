@@ -8,6 +8,11 @@ export interface CreateWalletData {
   address: string
 }
 
+export interface LinkChainData {
+  walletId: string
+  chainId: string
+}
+
 @Injectable()
 export class WalletsService {
   constructor (private prisma: PrismaService) {}
@@ -22,6 +27,22 @@ export class WalletsService {
             id: userId
           }
         },
+        chains: {
+          connect: {
+            id: chainId
+          }
+        }
+      }
+    })
+  }
+
+  async linkChain (data: LinkChainData) {
+    const { walletId, chainId } = data
+    return await this.prisma.wallet.update({
+      where: {
+        id: walletId
+      },
+      data: {
         chains: {
           connect: {
             id: chainId

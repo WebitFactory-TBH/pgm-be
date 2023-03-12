@@ -1,10 +1,11 @@
 import { Private } from '@common/decorators/isPrivate.decorator'
 import { RequestWithWalletAddress } from '@common/guards/permission.guard'
 import { WalletsService } from '@domains/wallets/wallets.service'
-import { Controller, Get, HttpStatus, Req, Res } from '@nestjs/common'
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger'
+import { Body, Controller, Get, HttpStatus, Post, Req, Res } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Prisma } from '@prisma/client'
 import { Response } from 'express'
+import { LinkWalletDto } from './dto/linkWallet.dto'
 import { UsersService } from './users.service'
 
 @Controller('users')
@@ -31,5 +32,37 @@ export class UsersController {
         }
       }
     }
+  }
+
+  @ApiOkResponse({ description: 'Linked the wallet to the user' })
+  @ApiBearerAuth()
+  @ApiBody({ type: LinkWalletDto })
+  @Post('link-wallet')
+  @Private()
+  async linkWallet (
+    @Body() linkWalletDto: LinkWalletDto,
+    @Req() request: RequestWithWalletAddress,
+    @Res() response: Response) {
+    const walletAddress = request.userAddress
+
+    try {
+      const wallet = await this.walletsService.create({
+        address: walletAddress,
+        chainId: linkWalletDto.chainId,
+        userId: linkWalletDto.userId
+      })
+
+      return response.status(HttpStatus.OK).json(wallet)
+    } catch (e) {
+      console.error(e)
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        switch (e.code) {
+        case 'P2002':
+          return response.status(HttpStatus.NOT_FOUND).json({ error: 'The user or chain doesn\'t exist' })
+        }
+      }
+    }
+
+    return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'An error occurred' })
   }
 }

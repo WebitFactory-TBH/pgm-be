@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res } from '@nestjs/common'
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger'
 import { Response } from 'express'
-import { CreateLinkAccessDto } from './dto/CreateLinkAccess.dto'
+import { CreateLinkAccessDto } from './dto/createLinkAccess.dto'
 import { LinkAccessesService } from './link-accesses.service'
 
 @Controller('link-accesses')
